@@ -36,6 +36,7 @@ def add_password():
     }
     with open("records.json","a") as file:
         json.dump(passwords, file, indent = 4)
+        
     
 def view_password():
     global passwords
@@ -48,7 +49,19 @@ def view_password():
         print(f"Password : {details["password"]}")
 
 def delete_password():
-    pass
+    print("Enter website whose records you want to delete.")
+    website = input("> ")
+    with open("records.json","r") as file:
+        passwords = json.load(file)
+    with open("records.json","w") as file:
+        if website in passwords:
+            del(passwords[website])
+            json.dump(passwords, file, indent = 4)
+            print("Record successfully deleted!")
+        else:
+            print("Record does not exist!")
+
+
 
 if __name__ == "__main__":
     main()

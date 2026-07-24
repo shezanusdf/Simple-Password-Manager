@@ -1,0 +1,4 @@
+1. Add 
+2. View
+3. Delete(yet to be added)
+4. Exit

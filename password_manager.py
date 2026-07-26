@@ -1,5 +1,5 @@
 import json
-passwords = {}
+
 def main():
     while True:
         print(
@@ -9,59 +9,77 @@ PASSWORD VAULT
 ==============
 1. Add 
 2. View
-3. Delete
-4. Exit
-Enter your choice(1-4)''')
+3. Edit
+4. Delete
+5. Exit
+Enter your choice(1-5)''')
         choice = int(input("> "))
+        passwords = load_records()
+        if choice == 5:
+            break
+        website = input("Enter Website Name: ")
         if choice == 1:
-            add_password()
+            username = input("Enter Username: ")
+            password = input("Enter Password: ")
+            add_password(passwords, website, username, password)
             continue
         elif choice == 2:
-            view_password()
+            view_password(passwords, website)
             continue
         elif choice == 3:
-            delete_password()
+            edit_password(passwords, website)
             continue
         elif choice == 4:
-            break
-        
-def add_password():
-    global passwords
-    website = input("Enter Website Name: ")
-    username = input("Enter username: ")
-    password = input("Enter password: ")
+            delete_password(passwords, website)
+            continue
+
+def take_input():
+    website = input("> ")
+    return website
+
+def load_records():
+    with open("records.json","r") as file:
+        try:
+            return json.load(file)
+        except:
+            return {}
+    
+def dump_records(passwords):
+    with open("records.json","w") as file:
+        json.dump(passwords, file, indent = 4)
+
+def add_password(passwords, website, username, password):
     passwords[website] = {
         "username" : username,
         "password" : password
     }
-    with open("records.json","a") as file:
-        json.dump(passwords, file, indent = 4)
+    dump_records(passwords)
         
     
-def view_password():
-    global passwords
-    website = input("Enter Website Name: ")
-    with open("records.json","r") as file:
-        passwords = json.load(file)
-    for website, details in passwords.items():
-        print(f"Website : {website}")
-        print(f"username : {details["username"]}")
-        print(f"Password : {details["password"]}")
+def view_password(passwords, website):
+    for websites, details in passwords.items():
+        if website == websites:
+            print(f"Website : {websites}")
+            print(f"username : {details["username"]}")
+            print(f"Password : {details["password"]}")
 
-def delete_password():
-    print("Enter website whose records you want to delete.")
-    website = input("> ")
-    with open("records.json","r") as file:
-        passwords = json.load(file)
-    with open("records.json","w") as file:
-        if website in passwords:
-            del(passwords[website])
-            json.dump(passwords, file, indent = 4)
-            print("Record successfully deleted!")
-        else:
-            print("Record does not exist!")
+def edit_password(passwords, website):
+    if website in passwords:
+        print("Enter New Password.")
+        new_password = input("> ")
+        passwords[website]["password"] = new_password
+        dump_records(passwords)
+        print("Record successfully changed!")
+    else:
+        print("Record does not exist!")
 
-
+def delete_password(passwords, website):
+    if website in passwords:
+        del(passwords[website])
+        dump_records(passwords)
+        print("Record successfully deleted!")
+    else:
+        print("Record does not exist!")
 
 if __name__ == "__main__":
     main()

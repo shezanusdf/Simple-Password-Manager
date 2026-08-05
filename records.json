@@ -1,10 +1,6 @@
 {
-    "s": {
-        "username": "s",
-        "password": "s"
-    },
-    "a": {
-        "username": "a",
-        "password": "a"
+    "gmail": {
+        "username": "shezan.biz@gmail.com",
+        "password": "shezan@123"
     }
 }
